@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    1. 공통 부분 내부에 각각 다시 넣기<br> 
+    2. 짧은 것을 if로 배치 후(else를 if로 보낼 경우 조건 !부정처리 해주기) return이나 break로 종료시키기<br> 
+    3. else 제거 후 또다른 if로 재생성<br>
+    <script>
+      function test() {
+        let result = "";
+        if (a) {
+          if (!b) {
+            result = "c";
+          }
+        } else {
+          result = "a";
+        }
+        result += "b";
+        return result;
+      }
+    </script>
+
+    <script>
+      function test() {
+        let result = "";
+        if (!a) {
+          result = "a";
+          result += "b";
+          return result;
+        }
+
+        if (!b) {
+          result = "c";
+        }
+        result += "b";
+        return result;
+      }
+    </script>
+  </body>
+</html>

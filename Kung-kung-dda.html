@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>쿵쿵따</title>
+</head>
+<body>
+    <div><span id="order">1</span>번째 참가자</div>
+    <!--span 2개하지말고 이렇게 div안에-->
+    <div>제시어: <span id="word"></span></div>
+    <input type="text">
+    <button>입력</button>
+
+<script>
+    //앞에 let이나 const 붙여야
+    const $order = document.querySelector('#order');
+    const $word = document.querySelector('#word');
+    const $input = document.querySelector('input');
+    const $button = document.querySelector('button');
+
+    let word; //제시어
+    let newWord; //새로입력한 단어
+
+    let order = Number($order.textContent);
+    const number = Number(prompt('몇 명이 참가하나요?'));
+
+    if(number){
+    const onClickButton = () => {
+        if(!$input.value){
+            alert('값을 입력해주세요.')
+        
+        }else if(newWord.length != 3){
+            alert('3글자로 작성해주세요.')
+            
+        }else if(!word || word[word.length-1]===newWord[0]){
+            word=newWord;
+            $word.textContent = word;
+            if(order>=number){
+                order=1;
+            }else{
+                 order++;
+            }
+            $order.textContent = order;
+        
+        }else {
+            alert('제시어를 보고 올바른 단어를 입력해주세요.')
+        }
+        
+   
+    $input.value="";
+    $input.focus();
+
+
+    };
+
+    const onInput = (event) => {
+        newWord = event.target.value;
+    };
+    $button.addEventListener('click', onClickButton);
+    $input.addEventListener('input', onInput);
+}
+</script>
+</body>
+</html>

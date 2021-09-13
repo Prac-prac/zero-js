@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+<style>
+    #container{
+        display: grid;
+        grid-template-columns : repeat(5,1fr);
+        grid-template-rows : repeat(6,1fr);
+        grid-template-areas:
+                   "dis dis dis dis dis"
+                   "dis dis dis dis dis"
+                   "t7 t8 t9 ce reset"
+                   "t4 t5 t6 multi division"
+                   "t1 t2 t3 minus plus"
+                   "le t0 ri result result";
+
+        width: 400px;
+        height : 300px;
+        border: 1px solid black;
+    }
+    .item{
+        border: 1px solid black;
+        padding: 2px;
+    }
+    .item:hover{
+       
+        border: 1px solid black;
+        padding: 2px;
+        background-color: gray;
+    }
+    .display{grid-area: dis;}
+    .item1{grid-area:t1;}
+    .item2{grid-area:t2;}
+    .item3{grid-area:t3;}
+    .item4{grid-area:t4;}
+    .item5{grid-area:t5;}
+    .item6{grid-area:t6;}
+    .item7{grid-area:t7;}
+    .item8{grid-area:t8;}
+    .item9{grid-area:t9;}
+    .item0{grid-area:t0;}
+    .item0{grid-area:t0;}
+    .plus{grid-area:plus;}
+    .minus{grid-area:minus;}
+    .multi{grid-area:multi;}
+    .division{grid-area:division;}
+    .result{grid-area: result;}
+    .reset{grid-area: reset;}
+    .ce{grid-area: ce;}
+    .le{grid-area: le;}
+    .ri{grid-area: ri;}
+
+</style>    
+</head>
+<body>
+    <div id=container>
+        <div class="item display"></div>
+        <div class="item item1">1</div>
+        <div class="item item2">2</div>
+        <div class="item item3">3</div>
+        <div class="item item4">4</div>
+        <div class="item item5">5</div>
+        <div class="item item6">6</div>
+        <div class="item item7">7</div>
+        <div class="item item8">8</div>
+        <div class="item item9">9</div>
+        <div class="item item0">0</div>
+        <div class="item plus">+</div>
+        <div class="item minus">-</div>
+        <div class="item multi">x</div>
+        <div class="item division">%</div>
+        <div class="item result">=</div>
+        <div class="item reset">reset</div>
+        <div class="item ce">ce</div>
+        <div class="item le">(</div>
+        <div class="item ri">)</div>
+
+
+    </div>
+</body>
+<script>
+    const $item1 = document.querySelector('.item1');
+    $item2 = document.querySelector('.item2');
+    $item3 = document.querySelector('.item3');
+    $item4 = document.querySelector('.item4');
+    $item5 = document.querySelector('.item5');
+    $item6 = document.querySelector('.item6');
+    $item7 = document.querySelector('.item7');
+    $item8 = document.querySelector('.item8');
+    $item9 = document.querySelector('.item9');
+    $item0 = document.querySelector('.item0');
+
+    $item1.addEventListener('click', ()=>{
+        alert('클릭');
+    })
+    const click = ()=>{
+      
+    };
+</script>
+</html>

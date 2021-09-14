@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>숫자야구</title>
+</head>
+<body>
+    <div>
+    <span id="answer"></span>
+    <button id="hide">답 보이기</button>
+    </div>
+    <input type="text">
+    <button id="click">도전</button>
+    <div id="display"></div>
+<script>
+    const $answer = document.querySelector('#answer');
+    const $hide = document.querySelector('#hide');
+    const $input = document.querySelector('input');
+    const $btn = document.querySelector('#click');
+    const $display = document.querySelector('#display');
+
+    let num =[];
+    let random;
+    let randomOk;
+    let stopIndex;
+    let hideToggle = true; //true일 때 숨기기, false일 때 보이기
+    let strike = 0;
+    let ball = 0;
+
+    num[0] = Math.floor(Math.random() * 9) + 1;
+    
+    for(let i=1; i<=3; i++){
+       do{
+        random = Math.floor(Math.random() * 10);
+        for(let j=0; j<=i-1; j++){
+            if(num[j] == random){
+                randomOk = false;
+                stopIndex = (i);
+                i = stopIndex;
+                j = 0;
+                break;   
+            } else {
+                randomOk = true;
+            }
+            if(!randomOk) continue; 
+        }
+    
+        } while(!randomOk)   
+        num[i] = random;
+
+    }
+
+    num.forEach( value => {
+        $answer.textContent+=value;
+    });
+
+
+    $hide.addEventListener('click', ()=>{
+        if(hideToggle){
+            hideToggle = false;
+            //$answer.style.display = 'hidden';
+            $answer.style.visibility = 'hidden'; 
+        } else {
+            hideToggle = true;
+            //$answer.style.display = 'inline';
+            $answer.style.visibility = 'visible'; 
+        }
+    });
+
+
+    $btn.addEventListener('click', ()=>{
+        if($input.value.length!=4 || $input.value[0]==0){
+            alert('맨 앞자리가 0이 아닌 숫자 4개를 입력해주세요');
+            $input.value='';
+            $input.focus();
+            return;
+        }
+        //서로 다른 4개 숫자 입력하는지
+        for(let k=0; k<4; k++){
+            let m = $input.value[k];
+            for(let n=0; n<4; n++){
+                if(k==n) break;
+                if($input.value[n] == m){
+                    alert('맨 앞자리가 0이 아닌 서로 다른 숫자 4개를 입력해주세요.');
+                    $input.value='';
+                    $input.focus();
+                    return;
+                } 
+            }
+        }
+       
+       // $display.textContent += $input.value;
+       $display.innerHTML += $input.value;
+       //여기
+        for(let a=0; a<4; a++){
+        console.log($input.value[a]);
+        }
+        $input.value='';
+        $input.focus();
+
+
+        //스트라이크, 볼 계산
+        for(let x=0; x<4; x++){
+            console.log($input.value[x], num[x]);
+            if(parseInt($input.value[x])==num[x]){strike++;}
+            for(let p=0; p<4; p++){
+                if(parseInt($input.value[x])==num[p]){ball++;}
+            }
+        }
+        if(strike==0&&ball==0){
+            $display.innerHTML += ("아웃"+ "<br>");
+        }
+        $display.innerHTML += (strike+"스트라이크 "+ball+"볼"+ "<br>");
+        
+
+    });
+</script>    
+</body>
+</html>

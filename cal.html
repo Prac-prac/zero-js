@@ -126,6 +126,7 @@
     const onClickNumber = (event) => {
       //event.target.value; //키보드 쳤을 때 키보드 값 가져옴
 
+    
       //if문 중첩 제거 -> return으로 끊고 else 지우고 새로운 if로
       if (!operator) {//비어있을 때
         if(resultOn){ //result 결과 보고 새 계산할 때 결과창 지우기
@@ -166,13 +167,14 @@
     document.querySelector("#num-9").addEventListener("click", onClickNumber);
 
     const onClickOperator = (op) => () => {
+      
       if(numTwo){
         interRimCalc(op);
         operator = op;
         $operator.value = op;
         return;
       }
-      if (numOne) {
+      if(numOne) {
         operator = op;
         $operator.value = op;
       } else {

@@ -62,7 +62,37 @@
     const $operator = document.querySelector("#operator");
     const $result = document.querySelector("#result");
     let resultOn = false; //result 후 결과창에 남은 값
+    let store ='';
    
+    const interRimCalc = (op)=>{
+    if (numTwo) {
+        switch (op) {
+          case "+":
+            //문자열이라 parseInt. 나머지 연산은 숫자로 바꿔서 계산됨  
+            $result.value = parseInt(numOne) + parseInt(numTwo);
+            store = parseInt(numOne) + parseInt(numTwo);
+            break;
+          case "-":
+            $result.value = numOne - numTwo;
+            store = numOne - numTwo;
+            break;
+          case "*":
+            $result.value = numOne * numTwo;
+            store = numOne * numTwo;
+            break;
+          case "/":
+            $result.value = numOne / numTwo;
+            store = numOne / numTwo;
+            break;
+          default:
+            break;
+        }
+        numOne = store;
+        operator = '';
+        numTwo = '';
+
+      } 
+    };
     /*
     //화살표함수 중괄호{와 return 생락하기 전 참고
     const onClickNumber = (number) => {
@@ -101,18 +131,23 @@
         if(resultOn){ //result 결과 보고 새 계산할 때 결과창 지우기
             $result.value = '';
             resultOn=false;
+            store='';
+            numOne='';
         }
         //evnet.target은 num버튼
         numOne += event.target.textContent;
         $result.value += event.target.textContent;
+        console.log(typeof numOne);
+        console.log(numOne);
         return;
       }
-      if (!numTwo) {
-        //numTwo 만들고 있을 땐 지워지면 안됨
+      if (!numTwo) { //numTwo 만들고 있을 땐 지워지면 안됨
         $result.value = "";
       }
       numTwo += event.target.textContent;
       $result.value += event.target.textContent;
+      console.log(typeof numTwo);
+      console.log(numTwo);
     };
 
     //addEventListener의 두번째 인수인 함수자리는 함수이름만 와야됨. () 안됨.
@@ -131,6 +166,12 @@
     document.querySelector("#num-9").addEventListener("click", onClickNumber);
 
     const onClickOperator = (op) => () => {
+      if(numTwo){
+        interRimCalc(op);
+        operator = op;
+        $operator.value = op;
+        return;
+      }
       if (numOne) {
         operator = op;
         $operator.value = op;
@@ -153,29 +194,33 @@
       .addEventListener("click", onClickOperator("*"));
     document.querySelector("#calculate").addEventListener("click", () => {
       if (numTwo) {
-
         switch (operator) {
           case "+":
             //문자열이라 parseInt. 나머지 연산은 숫자로 바꿔서 계산됨  
             $result.value = parseInt(numOne) + parseInt(numTwo);
+            store = parseInt(numOne) + parseInt(numTwo);
             break;
           case "-":
             $result.value = numOne - numTwo;
+            store = numOne - numTwo;
             break;
           case "*":
             $result.value = numOne * numTwo;
+            store = numOne * numTwo;
             break;
           case "/":
             $result.value = numOne / numTwo;
+            store = numOne / numTwo;
             break;
           default:
             break;
         }
-        numOne = '';
+        numOne = store;
         operator = '';
         numTwo = '';
         $operator.value = '';
         resultOn = true;
+        
       } else {
         alert("숫자를 먼저 입력하세요.");
       }

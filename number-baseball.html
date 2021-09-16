@@ -8,34 +8,35 @@
 </head>
 <body>
     <div>
-    <span id="answer"></span>
+    <span id="answer" style="visibility: hidden;"></span>
     <button id="hide">답 보이기</button>
     </div>
     <input type="text">
     <button id="click">도전</button>
-    <div id="display"></div>
-    <button id="re" style="display: none;">게임 다시하기</button>
+    <div id="logs"></div>
+    <button id="re" style="logs: none;">게임 다시하기</button>
 <script>
     const $answer = document.querySelector('#answer');
     const $hide = document.querySelector('#hide');
     const $input = document.querySelector('input');
     const $btn = document.querySelector('#click');
-    const $display = document.querySelector('#display');
+    const $logs = document.querySelector('#logs');
     const $re = document.querySelector('#re');
     
     
-    do{
-    
-    
+    //do{
+  
     let num =[];
     let random;
     let randomOk;
     let stopIndex;
-    let hideToggle = true; //true일 때 숨기기, false일 때 보이기
+    let hideToggle = false; //true일 때 숨기기, false일 때 보이기
     let strike = 0;
     let sameNumber = 0;
     let ball = 0;
     let re=false;
+    let count=0; //10번까지만 시도
+
 
     num[0] = Math.floor(Math.random() * 9) + 1;
     
@@ -68,11 +69,11 @@
     $hide.addEventListener('click', ()=>{
         if(hideToggle){
             hideToggle = false;
-            //$answer.style.display = 'hidden';
+            //$answer.style.logs = 'hidden';
             $answer.style.visibility = 'hidden'; 
         } else {
             hideToggle = true;
-            //$answer.style.display = 'inline';
+            //$answer.style.logs = 'inline';
             $answer.style.visibility = 'visible'; 
         }
     });
@@ -98,9 +99,10 @@
                 } 
             }
         }
-
-        // $display.textContent += $input.value;
-        $display.innerHTML += $input.value+"&nbsp;";
+        
+        count++;
+        // $logs.textContent += $input.value;
+        $logs.innerHTML += "["+count+"번째 시도] "+$input.value+"&nbsp;";
 
 
          //스트라이크, 볼 계산
@@ -112,19 +114,26 @@
         }
         ball = sameNumber - strike;
         if(strike==0&&ball==0){
-            $display.innerHTML += ("아웃"+ "<br>");
+            $logs.innerHTML += ("OUT"+ "<br>");
         } else if(strike==4){
-            $display.innerHTML += "홈런!";
-            $re.style.display = "block";
-            $btn.style.display = "none";
+            $logs.innerHTML += "HR!";
+            $re.style.logs = "block";
+            $btn.style.logs = "none";
         } else if(strike==0 && ball){
-            $display.innerHTML += (ball+"볼"+ "<br>");
+            $logs.innerHTML += (ball+"B"+ "<br>");
         } else if(ball==0 && strike){
-            $display.innerHTML += (strike+"스트라이크"+ "<br>");
+            $logs.innerHTML += (strike+"S"+ "<br>");
         } else {
-            $display.innerHTML += (strike+"스트라이크 "+ball+"볼"+ "<br>");
+            $logs.innerHTML += (strike+"S "+ball+"B"+ "<br>");
         }
-            
+        
+        if(count==10){
+            $btn.style.logs = "none";
+            $logs.innerHTML += "10번의 도전이 끝났습니다.<br> 정답은 "+$answer.textContent+"였습니다.<br> 다시 하시겠습니까?";
+            $re.style.logs = "block";
+            return;
+        }
+
         strike=0;
         sameNumber=0;
         ball=0;
@@ -138,7 +147,7 @@
     $re.addEventListener('click', ()=>{
         re=true;
     });
-    }while(re)
+    //}while(re)
 </script>    
 </body>
 </html>

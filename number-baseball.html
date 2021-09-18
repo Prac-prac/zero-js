@@ -14,7 +14,7 @@
     <input type="text">
     <button id="click">도전</button>
     <div id="logs"></div>
-    <button id="re" style="logs: none;">게임 다시하기</button>
+    <button id="re" style="display: none;">게임 다시하기</button>
 <script>
     const $answer = document.querySelector('#answer');
     const $hide = document.querySelector('#hide');
@@ -117,8 +117,8 @@
             $logs.innerHTML += ("OUT"+ "<br>");
         } else if(strike==4){
             $logs.innerHTML += "HR!";
-            $re.style.logs = "block";
-            $btn.style.logs = "none";
+            $re.style.display = "block";
+            $btn.style.display = "none";
         } else if(strike==0 && ball){
             $logs.innerHTML += (ball+"B"+ "<br>");
         } else if(ball==0 && strike){
@@ -128,9 +128,9 @@
         }
         
         if(count==10){
-            $btn.style.logs = "none";
+            $btn.style.display = "none";
             $logs.innerHTML += "10번의 도전이 끝났습니다.<br> 정답은 "+$answer.textContent+"였습니다.<br> 다시 하시겠습니까?";
-            $re.style.logs = "block";
+            $re.style.display = "block";
             return;
         }
 

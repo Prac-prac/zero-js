@@ -1,0 +1,78 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>가위바위보</title>
+    <style>
+      #computer {
+        width: 142px;
+        height: 200px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="computer"></div>
+    <div>
+      <button id="scissors" class="btn">가위</button>
+      <button id="rock" class="btn">바위</button>
+      <button id="paper" class="btn">보</button>
+    </div>
+    <div id="score">0</div>
+    <script>
+      const $computer = document.querySelector("#computer");
+      const $score = document.querySelector("#score");
+      const $rock = document.querySelector("#rock");
+      const $scissors = document.querySelector("#scissors");
+      const $paper = document.querySelector("#paper");
+      const IMG_URL = "./rsp.png";
+      $computer.style.background = `url(${IMG_URL}) 0 0`; //뒤에 두 개 background-position(위치)
+      $computer.style.backgroundSize = "auto 200px"; //높이에 맞춰 비율
+      const rspXposition = {
+        scissors: "0",
+        rock: "-220px",
+        paper: "-440px",
+      };
+
+      //let coord = "0"; 직관적이지 않은 코드
+      let computerChoice = "scissors";
+      const changeComputerHand = () => {
+        if (computerChoice === "scissors") {
+          computerChoice = "rock";
+        } else if (computerChoice === "rock") {
+          computerChoice = "paper";
+        } else if (computerChoice === "paper") {
+          computerChoice = "scissors";
+        }
+        //rspXposition.computerChoice(X) computerChoice 변수 아닌 문자열로 들어감
+        $computer.style.background = `url(${IMG_URL}) ${rspXposition[computerChoice]} 0`;
+        //backgroundSize는 안 바꾸지만 같이 적어줘야. 안 적으면 reset됨
+        $computer.style.backgroundSize = "auto 200px";
+        //setTimeout(changeComputerHand, 50);
+      };
+      //setTimeout(changeComputerHand, 50);
+      //일정시간마다 반복 - 시간간격 보장 노력
+      let setIntReturnId = setInterval(changeComputerHand, 50);
+
+      const clickButton = () => {
+        //가바보 돌아가는 거 멈춤
+        clearInterval(setIntReturnId);
+        //방법2. 버튼 클릭 의미없게 -> 안쓰는 걸 권장.
+        $rock.removeEventListener("click", clickButton);
+        $scissors.removeEventListener("click", clickButton);
+        $paper.removeEventListener("click", clickButton);
+        //1초 뒤에 다시 돌아감
+        setTimeout(() => {
+          //방법1. 타이머 제거
+          //clearInterval(setIntReturnId);
+          setIntReturnId = setInterval(changeComputerHand, 50);
+          $rock.addEventListener("click", clickButton);
+          $scissors.addEventListener("click", clickButton);
+          $paper.addEventListener("click", clickButton);
+        }, 1000);
+      };
+      $rock.addEventListener("click", clickButton);
+      $scissors.addEventListener("click", clickButton);
+      $paper.addEventListener("click", clickButton);
+    </script>
+  </body>
+</html>

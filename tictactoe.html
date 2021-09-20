@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>틱택토</title>
+    <style>
+      table {
+        border-collapse: collapse;
+      }
+
+      td {
+        border: 1px solid black;
+        width: 40px;
+        height: 40px;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- <table>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </table> -->
+    <script>
+      /*
+      let row = [];
+      let col;
+      for (let i = 0; i < 3; i++) {
+        col = [];
+        for (let j = 0; j < 3; j++) {
+          col.push([]);
+        }
+        row.push(col);
+      }
+      */
+     //구조분해 할당: 객체의 속성명과 변수명 같을 때. but
+     //const {body} = document; 
+     
+     const $table = document.createElement("table");
+     const $result = document.createElement('div');
+     let turn = 'O';
+      for(let i=0; i<3; i++){
+        const $tr = document.createElement('tr');
+        for(let j=0; j<3; j++){
+          const $td = document.createElement('td');
+          //table, tr, td에 대한 요소는 document.createElement 를 통해서 이미 만들어 졌고
+          //for문이 종료 되고 아래 코드가 수행 되면, 만들어진 요소를 document의 body에 추가만 하는 것
+          $td.addEventListener('click', (event)=>{
+            if(event.target.textContent) return;
+            event.target.textContent = turn;
+            turn==='O'?'X':'O';
+          });
+          $tr.append($td);
+        }
+        $table.append($tr);
+      }
+        document.body.append($table);
+        document.body.append($result);
+    </script>
+  </body>
+</html>

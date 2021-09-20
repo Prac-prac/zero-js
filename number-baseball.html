@@ -127,7 +127,7 @@
             $logs.innerHTML += (strike+"S "+ball+"B"+ "<br>");
         }
         
-        if(count==10){
+        if(count>=10){
             $btn.style.display = "none";
             $logs.innerHTML += "10번의 도전이 끝났습니다.<br> 정답은 "+$answer.textContent+"였습니다.<br> 다시 하시겠습니까?";
             $re.style.display = "block";

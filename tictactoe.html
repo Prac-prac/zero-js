@@ -47,29 +47,117 @@
         row.push(col);
       }
       */
-     //구조분해 할당: 객체의 속성명과 변수명 같을 때. but
-     //const {body} = document; 
-     
-     const $table = document.createElement("table");
-     const $result = document.createElement('div');
-     let turn = 'O';
-      for(let i=0; i<3; i++){
-        const $tr = document.createElement('tr');
-        for(let j=0; j<3; j++){
-          const $td = document.createElement('td');
+      //구조분해 할당: 객체의 속성명과 변수명 같을 때. but
+      //const {body} = document;
+
+      const $table = document.createElement("table");
+      const $result = document.createElement("div");
+      const rows = [];
+      let turn = "O";
+      /*
+      [
+        [td, td, td],
+        [td, td, td],
+        [td, td, td],
+      ]
+      */
+
+      const checkWinner = (target)=>{
+        let rowIndex;
+        let cellIndex;
+        rows.forEach((row,ri)=>{
+          row.forEach((cell, ci)=>{
+            if(cell === target){
+              rowIndex = ri;
+              cellIndex = ci;
+            }
+          });
+        });
+
+        let hasWinner = false;
+        //가로줄검사
+        if(
+          rows[rowIndex][0].textContent === turn &&
+          rows[rowIndex][1].textContent === turn &&
+          rows[rowIndex][2].textContent === turn
+        ){hasWinner = true;}
+        //세로줄검사
+        if(
+          rows[0][cellIndex].textContent === turn &&
+          rows[1][cellIndex].textContent === turn &&
+          rows[2][cellIndex].textContent === turn
+        ){hasWinner = true;}
+        //대각선검사
+        if(
+          rows[0][0].textContent === turn &&
+          rows[1][1].textContent === turn &&
+          rows[2][2].textContent === turn  
+        ){hasWinner = true;}
+        if(
+          rows[0][2].textContent === turn &&
+          rows[1][1].textContent === turn &&
+          rows[2][0].textContent === turn  
+        ){hasWinner = true;}
+        return hasWinner;
+      };
+
+      const callback = (event) => {
+        //이벤트 버블링 막기
+        event.stopPropagation();
+        if (event.target.textContent) return;
+        event.target.textContent = turn;
+        //승부 판단 - 이겼는지
+        if(checkWinner(event.target)){
+          $result.textContent = `${turn}님이 승리!`;
+          //중요! 지우지 않으면 이긴 후에도 계속 클릭할 수 있
+          $table.removeEventListener('click', callback);
+          return;
+        }
+        //무승부 검사
+        let draw = true; //맞다고 놓고 빈 td 있는지
+        rows.forEach(row=>{
+          row.forEach(cell=>{
+            if(!cell.textContent) draw=false; //forEach 중간에 return 써도 안 멈춤
+          });
+        });
+        if(draw){
+          $result.textContent = `무승부`;
+          return;
+        }
+        turn = turn === "O" ? "X" : "O";
+      };
+      
+      
+      for (let i = 0; i < 3; i++) {
+        const $tr = document.createElement("tr");
+        const cells = [];
+        for (let j = 0; j < 3; j++) {
+          const $td = document.createElement("td");
           //table, tr, td에 대한 요소는 document.createElement 를 통해서 이미 만들어 졌고
           //for문이 종료 되고 아래 코드가 수행 되면, 만들어진 요소를 document의 body에 추가만 하는 것
-          $td.addEventListener('click', (event)=>{
-            if(event.target.textContent) return;
-            event.target.textContent = turn;
-            turn==='O'?'X':'O';
-          });
+          cells.push($td);
+          //td에다 주면 9개 만들어지고 지울 때도 9개 지워야..
+          //$td.addEventListener('click', callback);
+
           $tr.append($td);
         }
+        rows.push(cells);
         $table.append($tr);
       }
-        document.body.append($table);
-        document.body.append($result);
+      //td 클릭하면 -> tr 클릭됨 -> table 클릭됨.
+      //table에 addEventListener 달았으나 event.target(누가 될지x. 자식태그중하나)은 td
+      //event.currentTarget(addEventListener 달은 애)이 table
+      //이벤트버블링이자, 이벤트위임
+      $table.addEventListener("click", callback);
+      document.body.append($table);
+      document.body.append($result);
+      //이벤트 캡처링(부모->자식에게 이벤트전달) addE~ 세 번째 인수 true로 ex)팝업닫기에 사용. 외에 사용x
+      //기본값인 false 이벤트버블링
+      //$table.addEventListener("click", callback, true);
+      /*상위 태그에 addEventListener, 하위 태그 클릭시 상위 태그의 이벤트 리스너 동작 => 이벤트 버블링
+      하위 태그에 addEventListener, 상위 태그 클릭시 하위 태그의 이벤트 리스너 동작 => 이벤트 캡쳐링
+      td에 이벤트 리스너를 달지 않고 상위 태그인 table에 이벤트 리스너를 다는 게 '이벤트 위임(event delegation)'
+      이벤트 위임은 프로그래머가 의도적으로 하는 것이고, 버블링은 그냥 이벤트 자체의 특성  */
     </script>
   </body>
 </html>

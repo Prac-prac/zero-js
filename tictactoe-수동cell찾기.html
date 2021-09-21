@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>틱택토</title>
+    <title>forEach로 수동으로 cell 찾고 승부 감별</title>
     <style>
       table {
         border-collapse: collapse;
@@ -18,12 +18,42 @@
   </head>
 
   <body>
+    <!-- <table>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </table> -->
     <script>
+      /*
+      let row = [];
+      let col;
+      for (let i = 0; i < 3; i++) {
+        col = [];
+        for (let j = 0; j < 3; j++) {
+          col.push([]);
+        }
+        row.push(col);
+      }
+      */
+      //구조분해 할당: 객체의 속성명과 변수명 같을 때. but
+      //const {body} = document;
+
       const $table = document.createElement("table");
       const $result = document.createElement("div");
       const rows = [];
       let turn = "O";
-      
       //   [
       //     [td, td, td],
       //     [td, td, td],
@@ -31,10 +61,8 @@
       //   ]
 
       const checkWinner = (target)=>{
-        //tr은 rowIndex 갖고 있
-        let rowIndex = target.parentNode.rowIndex;
-        //td는 cellIndex 갖고 있
-        let cellIndex = target.cellIndex;
+        let rowIndex;
+        let cellIndex;
         rows.forEach((row,ri)=>{
           row.forEach((cell, ci)=>{
             if(cell === target){
@@ -84,8 +112,7 @@
           return;
         }
         //무승부 검사
-        //배열.every(조건함수)
-        let draw = rows.flat().every(td=>td.textContent); //textContent가 모두 있어야 true
+        let draw = true; //맞다고 놓고 빈 td 있는지
         rows.forEach(row=>{
           row.forEach(cell=>{
             if(!cell.textContent) draw=false; //forEach 중간에 return 써도 안 멈춤

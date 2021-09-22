@@ -71,13 +71,8 @@
         return hasWinner;
       };
 
-      const callback = (event) => {
-        //이벤트 버블링 막기
-        event.stopPropagation();
-        if (event.target.textContent) return;
-        event.target.textContent = turn;
-        //승부 판단 - 이겼는지
-        if(checkWinner(event.target)){
+      const resultWinOrDraw = (target)=>{
+        if(checkWinner(target)){
           $result.textContent = `${turn}님이 승리!`;
           //중요! 지우지 않으면 이긴 후에도 계속 클릭할 수 있
           $table.removeEventListener('click', callback);
@@ -86,16 +81,32 @@
         //무승부 검사
         //배열.every(조건함수)
         let draw = rows.flat().every(td=>td.textContent); //textContent가 모두 있어야 true
-        rows.forEach(row=>{
-          row.forEach(cell=>{
-            if(!cell.textContent) draw=false; //forEach 중간에 return 써도 안 멈춤
-          });
-        });
         if(draw){
           $result.textContent = `무승부`;
           return;
         }
         turn = turn === "O" ? "X" : "O";
+      }
+
+      let clickable=true; //setTimeout 컴퓨터턴 클릭 버그 막기 위한
+      const callback = (event) => {
+        //이벤트 버블링 막기
+        event.stopPropagation();
+        if(!clickable) return;
+        if(event.target.textContent) return;
+        event.target.textContent = turn;
+        resultWinOrDraw(event.target);
+        if(turn==='X'){
+          //setTimeout 버그. 컴퓨터가 칸 선택할 때까지 빈칸 클릭할 수 없도록 해야.
+          clickable = false;
+          setTimeout(()=>{
+            const emptyCells = rows.flat().filter(v=>!v.textContent);
+            const randomOfEmptyCells = emptyCells[Math.floor(Math.random()*emptyCells.length)];
+            randomOfEmptyCells.textContent = 'X';
+            resultWinOrDraw(randomOfEmptyCells);
+            clickable = true;
+          }, 1000);
+          }
       };
       
       

@@ -108,8 +108,12 @@
           this.updateMonsterStat();
           this.showMessage(`몬스터와 마주쳤다. ${this.monster.name}인 것 같다!`);
         } else if(input === '2'){ //휴식
+          this.hero.hp = this.hero.maxHp;
+          this.updateHeroStat();
+          this.showMessage('충분한 휴식을 취했다.');
 
         } else if(input === '3'){ //종료
+          this.showMessage(' ');
           this.quit();
         }
       }
@@ -118,8 +122,8 @@
         const input = event.target['battle-input'].value;
         if(input === '1'){ //공격
           const {hero, monster} = this;
-          hero.attak(monster);
-          monster.attak(hero);
+          hero.attack(monster);
+          monster.attack(hero);
           if(hero.hp<=0){
             this.showMessage(`${hero.lev}레벨에서 전사. 새 주인공을 생성하세요.`);
             this.quit();
@@ -135,9 +139,21 @@
           this.updateMonsterStat();
           
         } else if(input === '2'){ //회복
-            
+          const {hero, monster} = this;
+          hero.hp = Math.min(hero.maxHp, hero.hp + 20);
+          monster.attack(hero);
+          if(hero.hp<=0){
+            this.showMessage(`${hero.lev}레벨에서 전사. 새 주인공을 생성하세요.`);
+            this.quit();
+          }
+          this.showMessage('체력을 조금 회복했다!');
+          this.updateHeroStat();
+          
         } else if(input === '3'){ //도망
           this.changeScreen('game');
+          this.showMessage('부리나케 도망쳤다!');
+          this.monster = null;
+          this.updateMonsterStat();
         }
       }
       updateHeroStat(){
@@ -186,20 +202,31 @@
       }
   }
 
-    class Hero {
-      constructor(game, name){
+    class Unit{
+      constructor(game, name, hp, att, xp){
         this.game = game;
         this.name = name;
+        this.maxHp = hp;
+        this.hp = hp;
+        this.xp = xp;
+        this.att = att;
+      }
+      attack(target){
+        target.hp -= this.att;
+      }
+    }
+
+    class Hero extends Unit{
+      constructor(game, name){
+        super(game, name, 100, 10, 0); //부모 클래스의 생성자 호출
         this.lev = 1;
-        this.maxHp = 100;
-        this.hp = 100;
-        this.xp = 0;
-        this.att = 10;
         //Game과 Hero 엮어놔서 서로 왔다갔다해서 쓸 수 있
         //this.game.updateHeroStat();
       }
-      attak(target){
-        target.hp -= this.att;
+      attack(target){
+        super.attack(target); //부모 클래스의 attack
+        //부모 클래스 attack외의 동작
+        console.log('주인공이 공격');
       }
       heal(monster){
         this.hp += 20;
@@ -218,17 +245,9 @@
       }
     }
 
-    class Monster {
+    class Monster extends Unit{
       constructor(game, name, hp, att, xp){
-        this.game = game;
-        this.name = name;
-        this.maxHp = hp;
-        this.hp = hp;
-        this.att = att;
-        this.xp = xp;
-      }
-      attak(target){
-        target.hp -= this.att;
+        super(game, name, hp, att, xp);
       }
     }
     

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>짝맞추기</title>
+    <style>
+      .card {
+        display: inline-block;
+        margin-right: 20px;
+        margin-bottom: 20px;
+        width: 70px;
+        height: 100px;
+        perspective: 140px;
+      }
+
+      .card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+      }
+
+      /*flipped 추가하면 앞면이 보이고, 빼면 뒷면이 보임*/
+      .card.flipped .card-inner {
+        transform: rotateY(180deg);
+      }
+
+      .card-front {
+        background: navy;
+      }
+
+      .card-front,
+      .card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border: 1px solid black;
+        backface-visibility: hidden;
+      }
+
+      .card-back {
+        transform: rotateY(180deg);
+      }
+      
+    </style>
+  </head>
+  <body>
+    <div id="wrapper"></div>
+    <script>
+      const $wrapper = document.querySelector("#wrapper");
+
+      const total = 12;
+      const colors = ["red", "orange", "yellow", "green", "white", "pink"];
+      //concat 원본 수정 없이 새로운 배열 만들어냄(+그래서 얕은복사도 가능)
+      //[1].concat(2)과 [1].concat([2])는 같음. 배열 하나는 풀어서 합침 
+      let colorCopy = colors.concat(colors); //colors 두 배열이 합쳐짐. 색 2쌍으로 12개.
+      let shuffled = [];
+      let clicked = []; //두장 클릭
+      let completed = []; //두장이 같은 카드 모아놓
+      let clickable = false;
+
+      function shuffle() {
+        //피셔-예이츠 셔플
+        for (let i = 0; colorCopy.length > 0; i++) {
+          const randomIndex = Math.floor(Math.random() * colorCopy.length);
+          //splice 배열을 반환
+          shuffled = shuffled.concat(colorCopy.splice(randomIndex, 1));
+        }
+      }
+      function createCard(i){ //div.card > div.card-inner > (div.card-front + div.card-back)
+        const card = document.createElement('div');
+        card.className = 'card';
+        const cardInner = document.createElement('div');
+        cardInner.className = 'card-inner';
+        const cardFront = document.createElement('div');
+        cardFront.className = 'card-front';
+        const cardBack = document.createElement('div');
+        cardBack.className = 'card-back';
+        cardBack.style.backgroundColor = shuffled[i];
+        cardInner.append(cardFront);
+        cardInner.append(cardBack);
+        card.append(cardInner);
+        return card;
+      }
+
+      function onClickCard(){
+        if(!clickable 
+        || completed.includes(this) //이미 완성된 카드 다시 클릭
+        || clicked[0] === this ){ //내가 이미 클릭한 카드
+            return;
+        }
+        //여기서 this는 card (function이고 addE~ 때문에)
+        this.classList.toggle('flipped');
+        clicked.push(this);
+        if(clicked.length!==2) return;
+
+        //card 안 querySelector로 자식 card-back 선택
+        const firstClick = clicked[0].querySelector('.card-back').style.backgroundColor;
+        const secondClick = clicked[1].querySelector('.card-back').style.backgroundColor;
+        if(firstClick === secondClick){
+            // concat으로 하면 한 줄로 됨. 모르면 아래처럼
+            // completed = completed.concat(clicked);
+            completed.push(clicked[0]);
+            completed.push(clicked[1]);
+            clicked=[];
+            if(completed.length !== 12) return;
+            setTimeout(()=>{alert('축하합니다!');},1000);
+            
+            return;
+        }
+        //두 번째 카드 눌렀을 때 짝 안 맞으면 바로 remove해서 돌지 않아 앞면 볼 수가 없어 시간차
+        setTimeout(()=>{
+            clicked[0].classList.remove('flipped');
+            clicked[1].classList.remove('flipped');
+            clicked=[];
+        }, 1000);
+
+      }
+
+      function startGame(){
+          clickable = false;
+          shuffle();
+          for(let i=0; i<total; i++){
+              const card = createCard(i);
+              $wrapper.appendChild(card);
+              card.addEventListener('click', onClickCard);
+          }
+
+          document.querySelectorAll('.card').forEach((card, index)=>{
+              setTimeout(()=>{
+                card.classList.add('flipped');
+              }, 1000+100*index);
+        
+
+            setTimeout(()=>{ //5초 뒤 카드 전체 뒤집기
+                document.querySelectorAll('.card').forEach((card)=>{
+                    card.classList.remove('flipped');
+                });
+                clickable = true;
+            }, 5000);
+        });
+      }
+
+      startGame();
+
+      function resetGame(){
+          $wrapper.innerHTML = '';
+          //원본 바뀌는 : push, pop, unshift, shift, splice, sort
+          //안바뀌는 : concat, slice, filter, every, some, map, forEach, find, findIndex, includes
+          colorCopy = colors.concat(colors);
+          shuffled=[];
+          completed=[];
+          startGame();
+        }
+    </script>
+  </body>
+</html>

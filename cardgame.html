@@ -92,8 +92,10 @@
             return;
         }
         //여기서 this는 card (function이고 addE~ 때문에)
+        if(clicked.length<2){
         this.classList.toggle('flipped');
         clicked.push(this);
+        }
         if(clicked.length!==2) return;
 
         //card 안 querySelector로 자식 card-back 선택
@@ -102,6 +104,7 @@
         if(firstClick === secondClick){
             // concat으로 하면 한 줄로 됨. 모르면 아래처럼
             // completed = completed.concat(clicked);
+            clickable = false;
             completed.push(clicked[0]);
             completed.push(clicked[1]);
             clicked=[];
@@ -115,6 +118,7 @@
             clicked[0].classList.remove('flipped');
             clicked[1].classList.remove('flipped');
             clicked=[];
+            clickable = true;
         }, 1000);
 
       }

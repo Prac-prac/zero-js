@@ -97,24 +97,28 @@
         clicked.push(this);
         }
         if(clicked.length!==2) return;
-
+        clickable = false;
         //card 안 querySelector로 자식 card-back 선택
         const firstClick = clicked[0].querySelector('.card-back').style.backgroundColor;
         const secondClick = clicked[1].querySelector('.card-back').style.backgroundColor;
         if(firstClick === secondClick){
             // concat으로 하면 한 줄로 됨. 모르면 아래처럼
             // completed = completed.concat(clicked);
-            clickable = false;
+            
             completed.push(clicked[0]);
             completed.push(clicked[1]);
             clicked=[];
-            if(completed.length !== 12) return;
-            setTimeout(()=>{alert('축하합니다!');},1000);
+            if(completed.length !== 12){
+              clickable = true;
+              return;
+            } 
             
+            setTimeout(()=>{alert('축하합니다!');},1000);
             return;
         }
         //두 번째 카드 눌렀을 때 짝 안 맞으면 바로 remove해서 돌지 않아 앞면 볼 수가 없어 시간차
         setTimeout(()=>{
+            
             clicked[0].classList.remove('flipped');
             clicked[1].classList.remove('flipped');
             clicked=[];

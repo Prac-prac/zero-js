@@ -51,15 +51,21 @@
     <script>
       const $wrapper = document.querySelector("#wrapper");
 
-      const total = 12;
-      const colors = ["red", "orange", "yellow", "green", "white", "pink"];
+      //input으로 받아도 됨
+      const total = parseInt(prompt('카드 개수를 짝수로 입력하세요(최대 20장까지)'));
+      const colors = [
+        "red", "orange", "yellow", "green", "white", 
+        "pink", "cyan", "violet", "gray", "black",
+      ];
       //concat 원본 수정 없이 새로운 배열 만들어냄(+그래서 얕은복사도 가능)
       //[1].concat(2)과 [1].concat([2])는 같음. 배열 하나는 풀어서 합침 
-      let colorCopy = colors.concat(colors); //colors 두 배열이 합쳐짐. 색 2쌍으로 12개.
+      let colorSlice = colors.slice(0, total/2);
+      let colorCopy = colorSlice.concat(colorSlice); //colors 두 배열이 합쳐짐. 색 2쌍으로 12개.
       let shuffled = [];
       let clicked = []; //두장 클릭
       let completed = []; //두장이 같은 카드 모아놓
       let clickable = false;
+      let startTime;
 
       function shuffle() {
         //피셔-예이츠 셔플
@@ -92,12 +98,13 @@
             return;
         }
         //여기서 this는 card (function이고 addE~ 때문에)
-        if(clicked.length<2){
+        // if(clicked.length<2){ clicked에 더 이상 들어가지 않게 막아주려 했는데 그냥 clickable false로 하면 위에서 막아짐
         this.classList.toggle('flipped');
         clicked.push(this);
-        }
+        // }
         if(clicked.length!==2) return;
-        clickable = false;
+
+        clickable = false; //여기까지는 clicked에 두 개까지만 찼을 때만 올 수 있음. 더 클릭 못하게 막고 뒤에서 풀어줌.
         //card 안 querySelector로 자식 card-back 선택
         const firstClick = clicked[0].querySelector('.card-back').style.backgroundColor;
         const secondClick = clicked[1].querySelector('.card-back').style.backgroundColor;
@@ -112,8 +119,8 @@
               clickable = true;
               return;
             } 
-            
-            setTimeout(()=>{alert('축하합니다!');},1000);
+            const endTime = new Date();
+            setTimeout(()=>{alert(`축하합니다! ${(endTime-startTime)/1000}초 걸렸습니다.`);},1000);
             return;
         }
         //두 번째 카드 눌렀을 때 짝 안 맞으면 바로 remove해서 돌지 않아 앞면 볼 수가 없어 시간차
@@ -147,6 +154,7 @@
                     card.classList.remove('flipped');
                 });
                 clickable = true;
+                startTime = new Date();
             }, 5000);
         });
       }
